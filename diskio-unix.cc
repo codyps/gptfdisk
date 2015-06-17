@@ -280,7 +280,12 @@ int DiskIO::Seek(uint64_t sector) {
    } // if
 
    if (isOpen) {
-      seekTo = sector * (uint64_t) GetBlockSize();
+      uint64_t b = (uint64_t) GetBlockSize();
+      if (UINT64_MAX / b <= sector) {
+         cerr << "Overflow in seek calculation: " << b << " * " << sector << endl;
+         return 0;
+      }
+      seekTo = sector * b;
       sought = lseek64(fd, seekTo, SEEK_SET);
       if (sought != seekTo) {
          retval = 0;
