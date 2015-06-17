@@ -463,7 +463,10 @@ int GPTDataCL::DoOptions(int argc, char* argv[]) {
          retval = 2;
       } // if/else loaded OK
       if ((saveData) && (!neverSaveData) && (saveNonGPT) && (!pretend)) {
-         SaveGPTData(1);
+         if (!SaveGPTData(1)) {
+            cout << "Error encountered; partial data may be written";
+            retval = 5;
+         }
       }
       if (saveData && (!saveNonGPT)) {
          cout << "Non-GPT disk; not saving changes. Use -g to override.\n";
